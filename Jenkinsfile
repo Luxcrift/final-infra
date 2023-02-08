@@ -22,6 +22,12 @@ pipeline {
                 sh 'cd terraform; terraform init'
             }
         }
+        stage('Docker Getenv') {
+            steps {
+                sh 'source ./automation/docker_getenv.sh'
+                sh 'printenv'
+            }
+        }
         stage('Terraform Validate') {
             agent{
                 docker {
@@ -41,7 +47,6 @@ pipeline {
                 }
             }
             steps {
-                sh 'source ./automation/docker_getenv.sh'
                 sh 'cd terraform; terraform plan -var-file tfvars/$BRANCH_NAME.tfvars -out plan.out'
             }
         }
