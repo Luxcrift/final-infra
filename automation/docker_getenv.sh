@@ -2,11 +2,11 @@
 # table utils
 #source ./automation/printTable.sh
 # check version
-if [ -z "$VERSION" ]
-      then
-      VERSION=`jq -r '.version' ./package.json`
+# if [ -z "$VERSION" ]
+#       then
+#       VERSION=`jq -r '.version' ./package.json`
       
-fi
+# fi
 
 #get reponame
 git_url=$(basename $(git config --get remote.origin.url))
@@ -57,7 +57,6 @@ GIT_SHORT,$GIT_SHORT
 BRANCH_NAME,$BRANCH_NAME 
 REGISTRY,$REGISTRY
 NAME,$NAME 
-VERSION,$VERSION 
 REPOSITORY,$REPOSITORY 
 DOCKER_IMAGENAME,$REGISTRY/$REPOSITORY:$VERSION
 GIT_USER,$GIT_USER 
