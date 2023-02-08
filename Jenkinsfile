@@ -1,9 +1,9 @@
 pipeline {
     agent any
-        parameters {
-            booleanParam(name: 'terraformApply', defaultValue: true, description: 'Terraform Apply')
-            booleanParam(name: 'terraformDestroy', defaultValue: false, description: 'Select Terraform Desntroy')
-         }
+        // parameters {
+        //     booleanParam(name: 'terraformApply', defaultValue: true, description: 'Terraform Apply')
+        //     booleanParam(name: 'terraformDestroy', defaultValue: false, description: 'Select Terraform Desntroy')
+        //  }
     environment {
         AWS_ACCESS_KEY_ID = credentials('aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
@@ -20,6 +20,12 @@ pipeline {
             }
             steps {
                 sh 'cd terraform; terraform init'
+            }
+        }
+        stage('Docker Getenv') {
+            steps {
+                sh 'source ./automation/docker_getenv.sh'
+                sh 'printenv'
             }
         }
         stage('Terraform Validate') {
@@ -41,7 +47,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'cd terraform; terraform plan -var-file tfvars/dev.tfvars -out plan.out'
+                sh 'cd terraform; terraform plan -var-file tfvars/$BRANCH_NAME.tfvars -out plan.out'
             }
         }
         stage('Terraform Apply') {
@@ -51,38 +57,29 @@ pipeline {
                     args '-i --entrypoint='
                 }
             }
-            steps {
-
-              script {
-                if (!params.terraformDestroy) {
-                    if (params.terraformApply) {
-                      sh """
-                      #!/bin/bash
-                      cd terraform; terraform apply "plan.out"
-                      """  
+            steps { 
+                      sh 'cd terraform; terraform apply "plan.out"'
                     }
-                }
-              }
-            }
+                
         }
-        stage('Terraform Destroy') {
-            agent{
-                docker {
-                    image 'hashicorp/terraform:light'
-                    args '-i --entrypoint='
-                }
-            }
-            steps {
-                script {
-                    if (params.terraformDestroy) {
-                      sh """
-                      #!/bin/bash
-                      cd terraform; terraform destroy -auto-approve -var-file tfvars/dev.tfvars
-                      """     
-                }
-            }
-        }
-    }
+    //     stage('Terraform Destroy') {
+    //         agent{
+    //             docker {
+    //                 image 'hashicorp/terraform:light'
+    //                 args '-i --entrypoint='
+    //             }
+    //         }
+    //         steps {
+    //             script {
+    //                 if (params.terraformDestroy) {
+    //                   sh """
+    //                   #!/bin/bash
+    //                   cd terraform; terraform destroy -auto-approve -var-file tfvars/dev.tfvars
+    //                   """     
+    //             }
+    //         }
+    //     }
+    // }
 
     } // end stages
 
