@@ -1,6 +1,6 @@
 #!/bin/bash
 # table utils
-source ./automation/printTable.sh
+#source ./automation/printTable.sh
 # check version
 if [ -z "$VERSION" ]
       then
@@ -52,9 +52,7 @@ if [ -z "$GITLAB_USER_EMAIL" ]
 fi
 # echo result
 
-echo -e "\n\e[1;32m»» AUTOMATION: $AUTOMATION_SHORT $AUTOMATION_BRANCH_NAME \e[1;34m"
-printTable ',' "$(cat <<EOF
-VAR,VALUE
+echo -e "\e[1;34m
 GIT_SHORT,$GIT_SHORT
 BRANCH_NAME,$BRANCH_NAME 
 REGISTRY,$REGISTRY
@@ -63,10 +61,5 @@ VERSION,$VERSION
 REPOSITORY,$REPOSITORY 
 DOCKER_IMAGENAME,$REGISTRY/$REPOSITORY:$VERSION
 GIT_USER,$GIT_USER 
-GIT_USER_EMAIL,$GIT_USER_EMAIL 
-
-EOF
-)
-"
-echo -e "\e[0m \n\n\n"
+GIT_USER_EMAIL:\t$GIT_USER_EMAIL \e[0m \n\n\n"
 set +x
