@@ -17,6 +17,20 @@ resource "aws_security_group" "grupo_seguridad" {
       to_port = 22
       protocol = "TCP"
     } 
+    ingress {
+      cidr_blocks = ["0.0.0.0/0" ]
+      description = "Acceso al puerto de la app"
+      from_port = 3000
+      to_port = 3002
+      protocol = "TCP"
+    } 
+    ingress {
+      cidr_blocks = ["0.0.0.0/0" ]
+      description = "Acceso al puerto de la app"
+      from_port = 443
+      to_port = 443
+      protocol = "TCP"
+    }
 
     egress {
       cidr_blocks = ["0.0.0.0/0"]
